@@ -1,0 +1,37 @@
+name: Black
+
+env:
+  PYTHONUNBUFFERED: 1
+
+# on:
+#   push:
+#       branches: [ master ]
+#   pull_request:
+#       branches: [ master ]
+on: [repository_dispatch, workflow_dispatch]
+
+jobs:
+  black:
+    # SAWRA >> USE_MATRIX
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.12']
+    # SAWRA >> USE_MATRIX
+    # runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          # SAWRA >> USE_MATRIX
+          # python-version: '3.12'
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Install black
+        run: pip install black==23.7.0
+      
+      - name: Check code with black
+        run: black --check --diff --color .

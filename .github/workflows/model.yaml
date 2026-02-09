@@ -1,0 +1,22 @@
+name: Run Bash Scripts
+
+# on: [push]
+on: [repository_dispatch, workflow_dispatch]
+
+jobs:
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install black==23.7.0
+
+      - name: Run black
+        run: black --check --diff --color .
